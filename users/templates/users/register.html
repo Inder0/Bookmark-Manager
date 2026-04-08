@@ -1,0 +1,9 @@
+{% extends 'bookmarks/base.html' %}
+{% block content %}
+<form method="POST" class="m-10">
+    {% csrf_token %}
+    {% load tailwind_filters %}
+    {{ form|crispy }}
+    <button class='p-2 bg-blue-500 text-white mx-5 my-2' type="Submit">Register</button>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'bookmarks/base.html' %}
+{% block content %}
+<div class="m-10">
+<form method="POST">
+    {% csrf_token %}
+    {% load tailwind_filters %}
+    {{ form|crispy }}
+    <button class="bg-blue-600 text-white m-4 px-4 py-2" type="Submit">Login</button>
+</form>
+<p>
+    Dont have an account? <a class ="text-blue-400" href="{% url 'register' %}">Sign Up</a>
+</p>
+</div>
+{% endblock %}

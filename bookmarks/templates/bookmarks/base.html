@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>Menu</title>
+    {% endif %}
+</head>
+<body>
+    <nav class="bg-blue-600 text-white px-2 py-4">
+        <div class="flex justify-between">
+            <a class="font-bold text-2xl" href="{% url 'myapp:home' %}">FoodApp</a>
+            <div class="space-x-6">
+                
+                    {% if user.is_authenticated %}
+                        {% block nav %}
+                        {% endblock %}
+                        <a href="{% url 'profile' %}">Welcome! {{user.username}}</a>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}?next={{ request.path }}">Login</a>
+                    {% endif %}        
+            </div>
+        </div>
+    </nav>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="bg-green-500 text-green-700">
+            {{message}}
+        </div>
+        {% endfor %}    
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
