@@ -1,0 +1,80 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+{% for bookmark in bookmarks %}
+    <div class="bookmark-card p-4 rounded-2xl shadow flex flex-col h-full">
+
+        <div class="flex items-center gap-2 mb-2">
+            {% if bookmark.favicon %}
+                <img src="{{ bookmark.favicon }}" class="w-5 h-5">
+            {% endif %}
+            <h3 class="font-semibold text-white truncate">
+                {{ bookmark.custom_name|default:bookmark.title|default:bookmark.url }}
+            </h3>
+        </div>
+
+        <p class="text-sm text-gray-400 break-all mb-2">
+            {{ bookmark.url }}
+        </p>
+
+        <p class="text-sm text-gray-300 mb-4 line-clamp-3">
+            {{ bookmark.description }}
+        </p>
+
+        <div class="mt-auto flex justify-between items-center">
+
+            <a href="{{ bookmark.url }}" target="_blank"
+               class="text-blue-400 hover:underline text-sm">
+                Visit
+            </a>
+
+            <form 
+                hx-post="{% url 'bookmarks:delete_bookmark' bookmark.id %}"
+                hx-target="#bookmark-list"
+                hx-swap="innerHTML"
+                hx-include="[name='q']"
+                hx-confirm="Are you sure?"
+            >
+                {% csrf_token %}
+                <button class="text-red-400 hover:underline text-sm">
+                    Delete
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+{% empty %}
+    <p class="text-gray-400 col-span-full text-center">
+        No bookmarks found
+    </p>
+{% endfor %}
+<div class="col-span-full mt-6 flex justify-center gap-2">
+    <div class="flex items-center gap-3 text-sm text-gray-400"></div>
+    {% if page_obj.has_previous %}
+        <button 
+            hx-get="?q={{ query }}&page={{ page_obj.previous_page_number }}"
+            hx-target="#bookmark-list"
+            hx-swap="innerHTML"
+            class="px-3 py-1 bg-gray-800 rounded"
+        >
+            Prev
+        </button>
+    {% endif %}
+
+    <span class="px-3 py-1 text-gray-400">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <button 
+            hx-get="?q={{ query }}&page={{ page_obj.next_page_number }}"
+            hx-target="#bookmark-list"
+            hx-swap="innerHTML"
+            class="px-3 py-1 bg-gray-800 rounded"
+        >
+            Next
+        </button>
+    {% endif %}
+    </div>
+</div>
+</div>
