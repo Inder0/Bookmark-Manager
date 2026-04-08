@@ -7,7 +7,7 @@ class Bookmark(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     title=models.TextField(blank=True)
     description = models.TextField(blank=True)
-    custom_name=models.TextField()
+    custom_name=models.CharField(max_length=255)
     url=models.URLField(blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     favicon=models.URLField(blank=True)
