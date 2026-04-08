@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 def scrape_url(url):
-    response=requests.get(url,headers={"User-Agent":"Mozilla/5.0"})
+    response=requests.get(url,headers={"User-Agent":"Mozilla/5.0"},timeout=8)
     soup=BeautifulSoup(response.content,"html.parser")
     title=soup.title.text if soup.title else ""
     description_tag=soup.find("meta",attrs={"name":"description"})

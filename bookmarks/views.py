@@ -6,6 +6,9 @@ from django.views import View
 from django.views.generic import ListView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+
 
 # Create your views here.
 
@@ -15,10 +18,17 @@ class AddBookmarkView(LoginRequiredMixin,View):
         if form.is_valid():
             url=form.cleaned_data['url']
             custom_name=form.cleaned_data['custom_name']
-            if not url.startswith("http"):
-                url="https://"+url
+            validator = URLValidator()
+            try:
+                validator(url)
+            except ValidationError:
+                messages.error(request, "Enter valid URL with https://")
+                return redirect("home")
             try:
                 data=scrape_url(url)
+                if Bookmark.objects.filter(user=request.user, url=url).exists():
+                    messages.warning(request, "Bookmark already exists")
+                    return redirect("home")
                 Bookmark.objects.create(
                     user=request.user,
                     url=url,
@@ -36,6 +46,7 @@ class BookmarkListView(LoginRequiredMixin,ListView):
     model=Bookmark
     template_name="bookmarks/home.html"
     context_object_name="bookmarks"
+    paginate_by=10
     def get_queryset(self):
         return Bookmark.objects.filter(user=self.request.user).order_by("-created_at")
     def get_context_data(self, **kwargs):
