@@ -22,10 +22,10 @@ class AddBookmarkView(LoginRequiredMixin,View):
                 Bookmark.objects.create(
                     user=request.user,
                     url=url,
-                    title=data["title"]
-                    description=data['description']
-                    favicon=data['favicon']
-                    custom_name=custom_name
+                    title=data["title"],
+                    description=data['description'],
+                    favicon=data['favicon'],
+                    custom_name=custom_name,
                 )
                 messages.success(request,"Bookmark Added!")
             except:

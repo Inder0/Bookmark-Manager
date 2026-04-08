@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'users',
     'bookmarks',
     'crispy_forms',
     'crispy_tailwind',
@@ -126,3 +127,5 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
+LOGIN_REDIRECT_URL='bookmarks:home'
+LOGIN_URL='/login/'
