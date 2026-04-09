@@ -83,25 +83,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'bookmark_db',
-#         'USER': 'postgres',
-#         'PASSWORD': os.getenv('DB_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 import dj_database_url
 
 DATABASES = {
-    "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
-}
+    "default": dj_database_url.parse(
+        os.getenv("DATABASE_URL", "sqlite:///db.sqlite3")
+    )}
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
