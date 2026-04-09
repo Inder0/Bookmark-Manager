@@ -15,7 +15,6 @@ class CustomPasswordResetForm(PasswordResetForm):
         email = self.cleaned_data.get("email")
         users = User.objects.filter(email=email)
         if not users.exists():
-            # Don't reveal this to user (security)
             return email
         for user in users:
             if not user.has_usable_password():
@@ -30,7 +29,6 @@ class CustomSetPasswordForm(SetPasswordForm):
     new_password2 = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': 'Confirm New Password'})
     )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -11,7 +11,6 @@
         <form method="POST" class="space-y-4">
             {% csrf_token %}
 
-            <!-- GLOBAL ERRORS -->
             {% if form.non_field_errors %}
                 <div class="bg-red-500/10 border border-red-500 text-red-400 p-3 rounded-xl text-sm">
                     {% for error in form.non_field_errors %}
@@ -20,7 +19,6 @@
                 </div>
             {% endif %}
 
-            <!-- USERNAME -->
             <div>
                 {{ form.username }}
                 {% for error in form.username.errors %}
@@ -28,7 +26,6 @@
                 {% endfor %}
             </div>
 
-            <!-- PASSWORD -->
             <div>
                 {{ form.password }}
                 {% for error in form.password.errors %}
@@ -36,7 +33,6 @@
                 {% endfor %}
             </div>
 
-            <!-- SUBMIT -->
             <button class="w-full bg-blue-600 hover:bg-blue-700 transition rounded-xl py-3 font-semibold">
                 Login
             </button>

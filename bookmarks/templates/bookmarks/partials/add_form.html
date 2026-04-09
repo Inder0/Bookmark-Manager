@@ -1,0 +1,25 @@
+<form
+    hx-post="{% url 'bookmarks:add-bookmark' %}"
+    hx-target="#bookmark-list"
+    hx-swap="innerHTML"
+    hx-on="htmx:afterRequest: if(event.detail.successful) this.reset()"
+    novalidate
+    class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-6 flex flex-col sm:flex-row gap-3 items-start"
+>
+    {% csrf_token %}
+    <div class="w-full sm:flex-1">
+        {{ form.url }}
+        {% for error in form.url.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+    <div class="w-full sm:w-64">
+        {{ form.custom_name }}
+        {% for error in form.custom_name.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+    <button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold">
+        Add Bookmark
+    </button>
+</form>

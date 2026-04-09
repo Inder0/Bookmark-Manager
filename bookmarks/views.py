@@ -9,11 +9,12 @@ from django.contrib import messages
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 # Create your views here.
 
 class AddBookmarkView(LoginRequiredMixin, View):
-
     def post(self, request):
         form = BookmarkForm(request.POST)
         if not form.is_valid():
@@ -46,11 +47,34 @@ class AddBookmarkView(LoginRequiredMixin, View):
         except Exception as e:
             form.add_error("url", "Could not fetch site data")
             return self.render_with_errors(request, form)
+        if request.headers.get("HX-Request"):
+            return self.render_bookmarks_partial(request)
         return redirect("bookmarks:home")
     
-    def render_with_errors(self, request, form):
-        bookmarks = Bookmark.objects.filter(user=request.user)
+    def render_bookmarks_partial(self, request):
+        query = request.GET.get("q", "")
+        bookmarks = Bookmark.objects.filter(user=request.user).order_by("-created_at")
+        if query:
+            bookmarks = bookmarks.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query))
+        paginator = Paginator(bookmarks, 9)
+        page_obj = paginator.get_page(1)
 
+        html = render_to_string(
+            "bookmarks/partials/bookmark_list.html",
+            {"page_obj": page_obj,"query": query,},request=request)
+        return HttpResponse(html)
+        
+    
+    def render_with_errors(self, request, form):
+        if request.headers.get("HX-Request"):
+            html = render_to_string(
+                "bookmarks/partials/add_form.html",
+                {"form": form},
+                request=request)
+            return HttpResponse(html, status=400)
+        bookmarks = Bookmark.objects.filter(user=request.user)
         return render(request, "bookmarks/home.html", {
             "form": form,
             "bookmarks": bookmarks,
@@ -77,15 +101,11 @@ class BookmarkListView(LoginRequiredMixin,ListView):
         context["form"]=BookmarkForm()
         context["query"] = self.request.GET.get("q", "")
         return context
-    def render_to_response(self, context, **response_kwargs):
+    def get_template_names(self):
         if self.request.headers.get("HX-Request"):
-            return self.response_class(
-                request=self.request,
-                template="bookmarks/partials/bookmark_list.html",
-                context=context,
-                **response_kwargs
-            )
-        return super().render_to_response(context, **response_kwargs)
+            return ["bookmarks/partials/bookmark_list.html"]
+        return ["bookmarks/home.html"]
+
     
 def bookmark_list(request):
     bookmarks = Bookmark.objects.filter(user=request.user)
