@@ -59,14 +59,33 @@ class AddBookmarkView(LoginRequiredMixin, View):
 class BookmarkListView(LoginRequiredMixin,ListView):
     model=Bookmark
     template_name="bookmarks/home.html"
-    context_object_name="bookmarks"
     paginate_by=9
     def get_queryset(self):
-        return Bookmark.objects.filter(user=self.request.user)
+        queryset=Bookmark.objects.filter(user=self.request.user)
+        query = self.request.GET.get("q")
+
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query)|
+                Q(custom_name__icontains=query)
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
         context["form"]=BookmarkForm()
+        context["query"] = self.request.GET.get("q", "")
         return context
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get("HX-Request"):
+            return self.response_class(
+                request=self.request,
+                template="bookmarks/partials/bookmark_list.html",
+                context=context,
+                **response_kwargs
+            )
+        return super().render_to_response(context, **response_kwargs)
     
 def bookmark_list(request):
     bookmarks = Bookmark.objects.filter(user=request.user)

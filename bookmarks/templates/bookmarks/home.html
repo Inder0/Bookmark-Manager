@@ -41,13 +41,15 @@
         <input 
             type="text"
             name="q"
+            value="{{query}}"
             placeholder="Search..."
             class="w-full sm:w-72 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 text-white"
 
-            hx-get="{% url 'bookmarks:bookmark_list' %}"
+            hx-get="{% url 'bookmarks:home' %}"
             hx-trigger="keyup changed delay:300ms"
             hx-target="#bookmark-list"
             hx-swap="innerHTML"
+            hx-push-url="true"
         />
     </div>
     <div id="bookmark-list">

@@ -1,7 +1,13 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-{% for bookmark in bookmarks %}
-    <div class="bookmark-card p-4 rounded-2xl shadow flex flex-col h-full">
+{% for bookmark in page_obj %}
+    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 
+                shadow-[0_10px_30px_rgba(0,0,0,0.7)] 
+                hover:shadow-[0_20px_50px_rgba(0,0,0,0.9)] 
+                hover:-translate-y-1 
+                transition-all duration-300
+
+                flex flex-col h-full">
 
         <div class="flex items-center gap-2 mb-2">
             {% if bookmark.favicon %}
@@ -52,10 +58,11 @@
     <div class="flex items-center gap-3 text-sm text-gray-400"></div>
     {% if page_obj.has_previous %}
         <button
-            hx-get="{% url 'bookmarks:bookmark_list' %}?page={{ page_obj.previous_page_number }}"
+            hx-get="{% url 'bookmarks:home' %}?page={{ page_obj.previous_page_number }}"
             hx-target="#bookmark-list"
             hx-swap="innerHTML"
             hx-include="[name='q']"
+            hx-push-url="true"
             class="px-3 py-1 bg-gray-800 rounded"
         >
             Prev
@@ -68,9 +75,10 @@
 
     {% if page_obj.has_next %}
         <button
-           hx-get="{% url 'bookmarks:bookmark_list' %}?page={{ page_obj.next_page_number }}""
+           hx-get="{% url 'bookmarks:home' %}?page={{ page_obj.next_page_number }}""
             hx-target="#bookmark-list"
             hx-include="[name='q']"
+            hx-push-url="true"
             hx-swap="innerHTML"
             class="px-3 py-1 bg-gray-800 rounded"
         >
