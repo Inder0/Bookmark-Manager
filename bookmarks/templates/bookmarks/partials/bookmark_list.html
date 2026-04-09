@@ -51,14 +51,14 @@
 <div class="col-span-full mt-6 flex justify-center gap-2">
     <div class="flex items-center gap-3 text-sm text-gray-400"></div>
     {% if page_obj.has_previous %}
-        <button 
-            hx-get="?q={{ query }}&page={{ page_obj.previous_page_number }}"
+        <a
+            hx-get="?page={{ page_obj.previous_page_number }}"
             hx-target="#bookmark-list"
             hx-swap="innerHTML"
             class="px-3 py-1 bg-gray-800 rounded"
         >
             Prev
-        </button>
+        </a>
     {% endif %}
 
     <span class="px-3 py-1 text-gray-400">
@@ -66,14 +66,14 @@
     </span>
 
     {% if page_obj.has_next %}
-        <button 
-            hx-get="?q={{ query }}&page={{ page_obj.next_page_number }}"
+        <a
+            hx-get="?page={{ page_obj.next_page_number }}"
             hx-target="#bookmark-list"
             hx-swap="innerHTML"
             class="px-3 py-1 bg-gray-800 rounded"
         >
             Next
-        </button>
+        </a>
     {% endif %}
     </div>
 </div>

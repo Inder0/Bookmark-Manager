@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth import logout
 from .forms import UserRegisterForm,LoginForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView,PasswordResetView
 # Create your views here.
 def register(request):
     form=UserRegisterForm(request.POST or None)
@@ -20,6 +20,12 @@ def register(request):
 def logout_view(request):
     logout(request)
     return render(request,"users/logout.html")
+
+
 class CustomLoginView(LoginView):
     template_name = "login.html"
     form_class = LoginForm
+
+class CustomPasswordResetView(PasswordResetView):
+    def get_domain(self):
+        return self.request.get_host()

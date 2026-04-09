@@ -46,6 +46,9 @@
             Don’t have an account?
             <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Sign up</a>
         </p>
+        <div class="flex items-center justify-center"><a href="{% url 'password_reset' %}" class="items-center justify-center text-blue-400">
+                Forgot password?
+            </a></div>
         <a href="{% url 'google_login' %}" 
         class="w-full flex items-center justify-center gap-3 bg-white text-black py-3 rounded-xl font-semibold hover:bg-gray-200 transition">
             <svg class="w-5 h-5" viewBox="0 0 48 48">

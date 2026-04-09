@@ -44,7 +44,7 @@
             placeholder="Search..."
             class="w-full sm:w-72 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 text-white"
 
-            hx-get="{% url 'bookmarks:search_bookmarks' %}"
+            hx-get="{% url 'bookmarks:bookmark_list' %}"
             hx-trigger="keyup changed delay:300ms"
             hx-target="#bookmark-list"
             hx-swap="innerHTML"

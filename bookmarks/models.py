@@ -8,9 +8,11 @@ class Bookmark(models.Model):
     title=models.TextField(blank=True)
     description = models.TextField(blank=True)
     custom_name=models.CharField(max_length=255)
-    url=models.URLField(blank=True)
+    url=models.URLField(blank=True,max_length=1000)
     created_at=models.DateTimeField(auto_now_add=True)
-    favicon=models.URLField(blank=True)
+    favicon=models.URLField(max_length=1000,blank=True)
 
     def __str__(self):
         return self.title or self.url
+    class Meta:
+        ordering = ['-created_at']

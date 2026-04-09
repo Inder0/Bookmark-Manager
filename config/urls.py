@@ -16,12 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.contrib.auth import views as auth_views
+from .forms import CustomPasswordResetForm,CustomSetPasswordForm
+from users.views import CustomPasswordResetView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('bookmarks.urls')),
     path("",include('users.urls')),
     path("", include("allauth.urls")),
-
-
+    path("password-reset/",CustomPasswordResetView.as_view(form_class=CustomPasswordResetForm), name="password_reset"),
+    path("password-reset/done/", auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
+    path("reset/<uidb64>/<token>/", auth_views.PasswordResetConfirmView.as_view(form_class=CustomSetPasswordForm), name="password_reset_confirm"),
+    path("reset/done/", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 ]
