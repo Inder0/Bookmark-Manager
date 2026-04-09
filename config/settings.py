@@ -85,6 +85,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 import dj_database_url
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://your-app.onrender.com",
+]
+
 DATABASES = {
     "default": dj_database_url.parse(
         os.getenv("DATABASE_URL", "sqlite:///db.sqlite3")
