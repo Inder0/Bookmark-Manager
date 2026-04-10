@@ -47,38 +47,21 @@ class AddBookmarkView(LoginRequiredMixin, View):
         except Exception as e:
             form.add_error("url", "Could not fetch site data")
             return self.render_with_errors(request, form)
-        if request.headers.get("HX-Request"):
-            return self.render_bookmarks_partial(request)
         return redirect("bookmarks:home")
     
-    def render_bookmarks_partial(self, request):
-        query = request.GET.get("q", "")
-        bookmarks = Bookmark.objects.filter(user=request.user).order_by("-created_at")
-        if query:
-            bookmarks = bookmarks.filter(
-                Q(title__icontains=query) |
-                Q(description__icontains=query))
-        paginator = Paginator(bookmarks, 9)
-        page_obj = paginator.get_page(1)
-
-        html = render_to_string(
-            "bookmarks/partials/bookmark_list.html",
-            {"page_obj": page_obj,"query": query,},request=request)
-        return HttpResponse(html)
-        
-    
     def render_with_errors(self, request, form):
-        if request.headers.get("HX-Request"):
-            html = render_to_string(
-                "bookmarks/partials/add_form.html",
-                {"form": form},
-                request=request)
-            return HttpResponse(html, status=400)
         bookmarks = Bookmark.objects.filter(user=request.user)
+
+        paginator = Paginator(bookmarks, 9)  
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
         return render(request, "bookmarks/home.html", {
-            "form": form,
-            "bookmarks": bookmarks,
+            "form": form,              
+            "page_obj": page_obj,      
+            "bookmarks": page_obj,     
         })
+
     
 class BookmarkListView(LoginRequiredMixin,ListView):
     model=Bookmark
@@ -98,7 +81,7 @@ class BookmarkListView(LoginRequiredMixin,ListView):
     
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
-        context["form"]=BookmarkForm()
+        context["form"]=kwargs.get("form", BookmarkForm())
         context["query"] = self.request.GET.get("q", "")
         return context
     def get_template_names(self):
