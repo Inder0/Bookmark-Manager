@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 import dj_database_url
 
 CSRF_TRUSTED_ORIGINS = [
-    "ookmark-manager-j3qw.onrender.com",
+    "https://bookmark-manager-j3qw.onrender.com",
 ]
 
 DATABASES = {
