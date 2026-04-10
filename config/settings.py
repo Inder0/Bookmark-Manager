@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 import dj_database_url
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://your-app.onrender.com",
+    "ookmark-manager-j3qw.onrender.com",
 ]
 
 DATABASES = {
@@ -165,4 +165,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 SOCIALACCOUNT_STORE_TOKENS = False
 
-DOMAIN = "127.0.0.1:8000"
+DOMAIN = "ookmark-manager-j3qw.onrender.com"
